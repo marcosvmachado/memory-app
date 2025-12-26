@@ -35,26 +35,39 @@ const Home = () => {
       item
     ))
   }
-
+  const handleResetButton = () => {
+    setItems(prev => prev.map(item => 
+    item.toShow === true ? 
+    {...item, toShow: false}
+    :
+    {...item, toShow: false}
+    ))
+  }
   return (
     <div className="flex justify-center">
       <div className="container flex flex-col mt-20 mx-10">
         <div className="flex-1 flex-col">
+          <div className="border-3 border-white rounded-xl p-2 text-center bg-[#181836]">
+            <span className="text-2xl font-black text-white">Develop by Marquito</span>
+          </div>
+          
+          {/* 
           <Image
           src="/assets/devmemory_logo.png"
           alt=""
           width={250}
           height={250}
           />
+          */}
           <div className="flex flex-col mt-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Tempo</span>
-            <span className="text-5xl text-[#181836] font-bold">00:56</span>
+            <span className="text-5xl text-[#181836] font-bold">00:00</span>
           </div>
           <div className="flex flex-col my-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Movimentos</span>
-            <span className="text-5xl text-[#181836] font-bold">3</span>
+            <span className="text-5xl text-[#181836] font-bold">0</span>
           </div>
-          <button className="w-70 h-15 bg-[#1550f6] cursor-pointer rounded-xl flex">
+          <button onClick={ handleResetButton } className="w-70 h-15 bg-[#1550f6] cursor-pointer rounded-xl flex">
             <div className="flex-3 flex justify-center items-center bg-red-5 border-r border-white">
               <Image
               src="/assets/restart.svg"
@@ -66,7 +79,7 @@ const Home = () => {
             <div className="flex-7 flex justify-center items-center text-white">Reiniciar</div>
           </button>
         </div>
-        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 bg-gren-500 mt-5">
+        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 bg-gren-500 mt-10">
           {
             items.map((item, index) => (
               
