@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type Item = {
   id: number  
@@ -27,13 +27,33 @@ const Home = () => {
     {id: 11, defaultIcon:"/assets/b7.svg", icon:"/assets/moto.svg", toShow: false},
   ])
 
+  const [verific, setVerific] = useState([])
+
+  const [playing, setPlaying] = useState<boolean>(false)
+  const [second, setSecond] = useState(0)
+  const [minute, setMinute] = useState(0)
+  const [movements, setMovements] = useState(0)
+  const [count, setCount] = useState(0)
+
   const handleToShowButton = ( id: number ) => {
+    
+    setPlaying(true)
+    
     setItems(prev => prev.map(item => 
       item.id === id ?
       {...item, toShow: true}
       :
       item
     ))
+    
+    setCount(prev => prev + 1)
+    if(count === 1){
+      setMovements(prev => prev + 1)
+      setCount(0)
+    }
+
+    
+
   }
   const handleResetButton = () => {
     setItems(prev => prev.map(item => 
@@ -43,29 +63,43 @@ const Home = () => {
     {...item, toShow: false}
     ))
   }
+
+  useEffect(() => {
+    
+    if (!playing) return
+    const interval = setInterval(() => {  
+      setSecond(prev => {
+        if(prev === 59){
+          setMinute(prev => prev + 1)
+          return 0
+        } else {
+          return prev + 1
+        }
+      })
+     }, 100)
+    
+    return () => clearInterval(interval)
+  },[playing])
+
   return (
     <div className="flex justify-center">
-      <div className="container flex flex-col mt-20 mx-10">
+      <div className="container flex mt-20">
         <div className="flex-1 flex-col">
-          <div className="border-3 border-white rounded-xl p-2 text-center bg-[#181836]">
-            <span className="text-2xl font-black text-white">Develop by Marquito</span>
-          </div>
-          
-          {/* 
+ 
           <Image
           src="/assets/devmemory_logo.png"
           alt=""
           width={250}
           height={250}
           />
-          */}
+     
           <div className="flex flex-col mt-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Tempo</span>
-            <span className="text-5xl text-[#181836] font-bold">00:00</span>
+            <span className="text-5xl text-[#181836] font-bold">{`${minute}:${second}`}</span>
           </div>
           <div className="flex flex-col my-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Movimentos</span>
-            <span className="text-5xl text-[#181836] font-bold">0</span>
+            <span className="text-5xl text-[#181836] font-bold">{movements.toString()}</span>
           </div>
           <button onClick={ handleResetButton } className="w-70 h-15 bg-[#1550f6] cursor-pointer rounded-xl flex">
             <div className="flex-3 flex justify-center items-center bg-red-5 border-r border-white">
@@ -79,7 +113,7 @@ const Home = () => {
             <div className="flex-7 flex justify-center items-center text-white">Reiniciar</div>
           </button>
         </div>
-        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 bg-gren-500 mt-10">
+        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 bg-gren-500">
           {
             items.map((item, index) => (
               
