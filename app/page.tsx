@@ -120,8 +120,8 @@ const Home = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="container flex sm:flex-col xl:flex-row mt-20">
-        <div className="flex-1 flex-col">
+      <div className="container flex flex-col mx-10 xl:flex-row mt-20">
+        <div className="flex-1">
  
           <Image
           src="/assets/devmemory_logo.png"
@@ -150,7 +150,7 @@ const Home = () => {
             <div className="flex-7 flex justify-center items-center text-white">Reiniciar</div>
           </button>
         </div>
-        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 sm:mt-5 xl:m-0">
+        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 mt-5 xl:mt-0">
           {
             items.map((item, index) => (
               
