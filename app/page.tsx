@@ -36,11 +36,13 @@ const Home = () => {
   const [movements, setMovements] = useState(0)
   const [count, setCount] = useState(0)
   const [showCount, setShowCount] = useState(0)
+  const [block, setBlock] = useState(false)
 
   const handleToShowButton = ( id: number ) => {
     
     setPlaying(true)
     
+    if(block) return
     setItems(prev => prev.map(item => 
       item.id === id ?
       {...item, toShow: true}
@@ -60,7 +62,7 @@ const Home = () => {
 
  useEffect(() => {
     if (showCount === 2){
-      
+      setBlock(true)
       const itemsFiltered = items.filter(item => item.toShow === true) 
         
         if(itemsFiltered[0].icon === itemsFiltered[1].icon){
@@ -72,8 +74,19 @@ const Home = () => {
             }
           }
           setItems(tmpItems)
-          
+          setBlock(false)
           console.log(items)
+        } else {
+          setTimeout(() => {
+             setItems(prev => prev.map(item => 
+            item.toShow ?
+            {...item, toShow: false}
+            :
+            item
+          ))
+          setBlock(false)
+          }, 1000);
+         
         }
     setShowCount(0)
     }
@@ -107,7 +120,7 @@ const Home = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="container flex mt-20">
+      <div className="container flex sm:flex-col xl:flex-row mt-20">
         <div className="flex-1 flex-col">
  
           <Image
@@ -137,7 +150,7 @@ const Home = () => {
             <div className="flex-7 flex justify-center items-center text-white">Reiniciar</div>
           </button>
         </div>
-        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 bg-gren-500">
+        <div className="grid grid-cols-4 grid rows-4 gap-2 flex-2 sm:mt-5 xl:m-0">
           {
             items.map((item, index) => (
               
