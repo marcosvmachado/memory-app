@@ -8,23 +8,24 @@ type Item = {
   defaultIcon: string
     icon: string
     toShow: boolean
+    permanentShow: boolean
 }
 
 const Home = () => {
   
   const [items, setItems] = useState<Item[]>([
-    {id: 0, defaultIcon:"/assets/b7.svg", icon:"/assets/android.svg", toShow: false},
-    {id: 1, defaultIcon:"/assets/b7.svg", icon:"/assets/android.svg", toShow: false},
-    {id: 2, defaultIcon:"/assets/b7.svg", icon:"/assets/caminhao.svg", toShow: false},
-    {id: 3, defaultIcon:"/assets/b7.svg", icon:"/assets/caminhao.svg", toShow: false},
-    {id: 4, defaultIcon:"/assets/b7.svg", icon:"/assets/disney.svg", toShow: false},
-    {id: 5, defaultIcon:"/assets/b7.svg", icon:"/assets/disney.svg", toShow: false},
-    {id: 6, defaultIcon:"/assets/b7.svg", icon:"/assets/estrela.svg", toShow: false},
-    {id: 7, defaultIcon:"/assets/b7.svg", icon:"/assets/estrela.svg", toShow: false},
-    {id: 8, defaultIcon:"/assets/b7.svg", icon:"/assets/gasolina.svg", toShow: false},
-    {id: 9, defaultIcon:"/assets/b7.svg", icon:"/assets/gasolina.svg", toShow: false},
-    {id: 10, defaultIcon:"/assets/b7.svg", icon:"/assets/moto.svg", toShow: false},
-    {id: 11, defaultIcon:"/assets/b7.svg", icon:"/assets/moto.svg", toShow: false},
+    {id: 0, defaultIcon:"/assets/b7.svg", icon:"/assets/android.svg", toShow: false, permanentShow: false},
+    {id: 1, defaultIcon:"/assets/b7.svg", icon:"/assets/android.svg", toShow: false, permanentShow: false},
+    {id: 2, defaultIcon:"/assets/b7.svg", icon:"/assets/caminhao.svg", toShow: false, permanentShow: false},
+    {id: 3, defaultIcon:"/assets/b7.svg", icon:"/assets/caminhao.svg", toShow: false, permanentShow: false},
+    {id: 4, defaultIcon:"/assets/b7.svg", icon:"/assets/disney.svg", toShow: false, permanentShow: false},
+    {id: 5, defaultIcon:"/assets/b7.svg", icon:"/assets/disney.svg", toShow: false, permanentShow: false},
+    {id: 6, defaultIcon:"/assets/b7.svg", icon:"/assets/estrela.svg", toShow: false, permanentShow: false},
+    {id: 7, defaultIcon:"/assets/b7.svg", icon:"/assets/estrela.svg", toShow: false, permanentShow: false},
+    {id: 8, defaultIcon:"/assets/b7.svg", icon:"/assets/gasolina.svg", toShow: false, permanentShow: false},
+    {id: 9, defaultIcon:"/assets/b7.svg", icon:"/assets/gasolina.svg", toShow: false, permanentShow: false},
+    {id: 10, defaultIcon:"/assets/b7.svg", icon:"/assets/moto.svg", toShow: false, permanentShow: false},
+    {id: 11, defaultIcon:"/assets/b7.svg", icon:"/assets/moto.svg", toShow: false, permanentShow: false},
   ])
 
   const [verific, setVerific] = useState([])
@@ -34,6 +35,7 @@ const Home = () => {
   const [minute, setMinute] = useState(0)
   const [movements, setMovements] = useState(0)
   const [count, setCount] = useState(0)
+  const [showCount, setShowCount] = useState(0)
 
   const handleToShowButton = ( id: number ) => {
     
@@ -52,9 +54,31 @@ const Home = () => {
       setCount(0)
     }
 
-    
-
+    setShowCount(prev => prev + 1)
+  
   }
+
+ useEffect(() => {
+    if (showCount === 2){
+      
+      const itemsFiltered = items.filter(item => item.toShow === true) 
+        
+        if(itemsFiltered[0].icon === itemsFiltered[1].icon){
+          let tmpItems:Item[] = [...items]
+          for (let i in tmpItems) {
+            if (tmpItems[i].toShow){
+              tmpItems[i].permanentShow = true;
+              tmpItems[i].toShow = false; 
+            }
+          }
+          setItems(tmpItems)
+          
+          console.log(items)
+        }
+    setShowCount(0)
+    }
+    },[showCount])
+
   const handleResetButton = () => {
     setItems(prev => prev.map(item => 
     item.toShow === true ? 
@@ -76,7 +100,7 @@ const Home = () => {
           return prev + 1
         }
       })
-     }, 100)
+     }, 1000)
     
     return () => clearInterval(interval)
   },[playing])
@@ -95,7 +119,7 @@ const Home = () => {
      
           <div className="flex flex-col mt-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Tempo</span>
-            <span className="text-5xl text-[#181836] font-bold">{`${minute}:${second}`}</span>
+            <span className="text-5xl text-[#181836] font-bold">{`0${minute}:${second < 10 ? `0${second}` : second}`}</span>
           </div>
           <div className="flex flex-col my-10">
             <span className="text-xl text-[#b5bbbc] mb-2">Movimentos</span>
@@ -117,7 +141,7 @@ const Home = () => {
           {
             items.map((item, index) => (
               
-            item.toShow ? 
+            item.toShow || item.permanentShow ? 
               <div className="relative bg-[#1550f6] rounded-xl flex justify-center items-center">
                 <Image
                 src={item.icon}
